@@ -23,7 +23,7 @@ idna==3.4
 IMAPClient==2.3.1
 itsdangerous==2.1.2
 Jinja2==3.1.2
-kiwisolver==1.4.4
+kiwisolver==1.4.4he
 korean-lunar-calendar==0.3.1
 lark-parser==0.12.0
 lxml==4.9.2
@@ -62,3 +62,4 @@ tzlocal==4.2
 urllib3==2.0.2
 Werkzeug==2.2.3
 win-unicode-console==0.5
+gunicorn
