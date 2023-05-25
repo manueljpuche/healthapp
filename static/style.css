@@ -1,0 +1,67 @@
+*{
+    font-family: 'Barlow', sans-serif;
+}
+
+.content-main{
+    padding: 0 20px;
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 100vw;
+}
+
+.logo{
+    width: 200px;
+    margin: 30px auto;
+}
+
+.container__input{
+    padding: 5px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+input[type="text"]:valid{
+    border: 2px solid #36a84f;
+}
+
+select:valid{
+    border: 2px solid #36a84f;
+}
+
+input:focus, select:focus{
+    outline: none;
+}
+
+.form{
+    width: 100%;
+}
+
+.content-main__section{
+    margin-bottom: 20px;
+}
+
+h2{
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.download-log{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 7px;
+    color: black;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 50px;
+    margin: 7px;
+    transition: color 0.4s ease;
+}
+
+.download-log:hover{
+    color: #555;
+    cursor: pointer;
+    font-weight: 900;
+}

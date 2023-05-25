@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <head>
+      <!--Metadatos-->
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="keywords" content="Sabbag,APP">
+      <meta name="description" content="APP Sabbag Radiologos">
+      <meta name="author" content="Manuel Puche">
+      <meta name="copyright" content="Manuel Puche">
+      <meta name="robots" content="noindex">
+      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap" rel="stylesheet">
+      <title>Sabbag Radiologos APP</title>
+    </head>
+  </head>
+  <body>
+    <header class="header">
+      
+    </header>
+    <div class="content-main">
+      <img src="https://www.sabbagradiologos.com/wp-content/uploads/2016/05/logo-web.png" class="logo" alt="Sabbag Radiologos">
+      <div class="content-main__section"> 
+        <h2>Cambio de Modalidad</h2>
+        <form action="/modalidad" method="post" class="form">
+            <input type="text" class="container__input" name="os" placeholder="Ingresa OS (Orden de Servicio)" required oninput="validarOS(this)" minlength="7" maxlength="9" title="Ingresa un OS valido."/>
+            <label for="modalidad">Modalidad:</label>
+            <select id="modalidad" class="container__input" name="modalidad" required>
+              <option value="" selected></option>
+              <option value="CR">CR</option>
+              <option value="MR">MR</option>
+              <option value="CT">CT</option>
+              <option value="OT">OT</option>
+              <option value="PT">PT</option>
+              <option value="MG">MG</option>
+              <option value="US">US</option>
+              <option value="NM">NM</option>
+              <option value="XA">XA</option>
+            </select>
+          <input class="container__input"  type="submit" value="Cambiar"/>
+        </form>
+      </div>
+        
+      <div class="content-main__section">
+        <h2>Desbloquear Estudio</h2>
+        <form id="desbloqueo-form" action="/desbloqueo" method="post" class="form">
+          <input type="text" class="container__input" name="os" placeholder="Ingresa OS (Orden de Servicio)" required oninput="validarOS(this)" minlength="7" maxlength="9" title="Ingresa un OS valido."/>
+          <input class="container__input" type="submit" value="Desbloquear"/>
+        </form>
+      </div>
+      <!--
+      <div class="container_search">
+        <h2>Búsqueda en Informes</h2>
+        <form action="/resultados" method="post">
+          <label>Palabras clave separadas por coma:</label>
+          <input type="text" id="palabras_clave" name="palabras_clave"><br><br>
+          <label for="fecha_inicio" >Fecha de inicio:</label>
+          <input type="text" id="fecha_inicio" name="fecha_inicio"><br><br>
+          <label for="fecha_fin">Fecha de fin:</label>
+          <input type="text" id="fecha_fin" name="fecha_fin"><br><br>
+          <label for="check_palabras">Informes que contengan todas las palabras</label> <input type="checkbox" id="check_palabras" name="check_palabras"><i>  "Si no marca la opcion apareceran los informes que contenga cualquiera de las palabras buscadas"</i> <br><br>
+          <label for="modalidades">Modalidades:</label>
+          <select id="modalidades" name="modalidades" multiple>
+            <option value="todas" selected>Todas las modalidades</option>
+            <option value="CR">CR</option>
+            <option value="MR">MR</option>
+            <option value="CT">CT</option>
+            <option value="OT">OT</option>
+            <option value="PT">PT</option>
+            <option value="MG">MG</option>
+            <option value="US">US</option>
+            <option value="NM">NM</option>
+            <option value="XA">XA</option>
+          </select><br><br>
+          <label for="medico">Medico:</label>
+          <input type="text" id="medico" name="medico" /><br><br>
+          <input class="button_cm" type="submit" value="Buscar" />
+          
+        </form>
+        <script>
+            $(document).ready(function () {
+              $("#fecha_inicio").datepicker({
+                dateFormat: "yy-mm-dd",
+              });
+              $("#fecha_fin").datepicker({
+                dateFormat: "yy-mm-dd",
+              });
+            });
+          </script>
+      </div>-->
+    </div>
+    <a href="{{ url_for('static', filename='log.txt') }}" class="download-log" download="log.txt">Descargar log</a>
+    <script>
+      function validarOS(input) {
+        // Eliminar cualquier carácter que no sea un número o guion
+        input.value = input.value.replace(/[^0-9-]/g, '');
+        
+        // Verificar si el guion ya está presente
+        var tieneGuion = input.value.includes('-');
+        
+        // Lógica adicional en consecuencia
+        if (tieneGuion) {
+          console.log("El campo ya tiene el guion");
+        } else {
+          if (input.value.length === 6) {
+            input.value += '-';
+          }
+        }
+      }
+    </script>
+    
+    </body>
+</html>
