@@ -63,3 +63,4 @@ urllib3==2.0.2
 Werkzeug==2.2.3
 win-unicode-console==0.5
 gunicorn
+flask-cors
