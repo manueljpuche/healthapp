@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, send_file
 from flask_cors import CORS
 from functions import *
 from dotenv import load_dotenv
+import socket
 
 load_dotenv()
 
@@ -19,6 +20,8 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOSTS = os.getenv("DB_HOSTS").split(",") 
 DB_PORT = os.getenv("DB_PORT")
 
+HOST_CONNECT = ""
+
 for host in DB_HOSTS:
     try:
         conn = psycopg2.connect(
@@ -28,10 +31,12 @@ for host in DB_HOSTS:
             host=host,
             port=DB_PORT
         )
-        print(f"Conectado a la base de datos en {host}")
         break  # Si se conecta, salir del ciclo
     except psycopg2.OperationalError as e:
         print(f"No se pudo conectar a la base de datos en {host}: {e}")
+    finally:
+        writeLogs(f"Conectado a la base de datos en {host} desde {socket.gethostbyname(socket.gethostname())}")
+        
 
 cur = conn.cursor()
 

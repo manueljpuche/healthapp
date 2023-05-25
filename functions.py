@@ -1,4 +1,3 @@
-import psycopg2
 import datetime
 
 def list_equals(texto_informe: str, palabras_clave: list, servicio: str, os: str, paciente :str, fecha: str):
