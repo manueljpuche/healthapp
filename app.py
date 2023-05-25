@@ -3,12 +3,14 @@ import os
 from striprtf.striprtf import rtf_to_text
 from datetime import datetime
 from flask import Flask, render_template, request, send_file
+from flask_cors import CORS
 from functions import *
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__,static_folder='static')
+CORS(app)
 
 # Configuración de la conexión a la base de datos
 DB_NAME = os.getenv("DB_NAME")
