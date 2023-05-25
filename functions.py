@@ -38,7 +38,7 @@ def list_not_equals(texto_informe: str, palabras_clave: list, servicio: str, os:
                 lista.writelines(f"Estudio: {servicio}\nOS: {os}\nPaciente: {paciente}\nFecha: {fecha}\nPalabras: {palabras_encontradas}\n-----------\n\n")
             
 def writeLogs(text :str):
-    with open("static\\log.txt","a",encoding="UTF-8") as log:
+    with open("log.txt","a",encoding="UTF-8") as log:
         log.writelines(f"[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]: {text}\n")
                 
 
