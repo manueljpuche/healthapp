@@ -5,10 +5,7 @@ from datetime import datetime
 from flask import Flask, render_template, request, send_file
 from flask_cors import CORS
 from functions import *
-from dotenv import load_dotenv
 import socket
-
-load_dotenv()
 
 app = Flask(__name__,static_folder='static')
 CORS(app)
