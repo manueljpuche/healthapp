@@ -5,10 +5,13 @@ from datetime import datetime
 from flask import Flask, render_template, request, send_file
 from flask_cors import CORS
 from functions import *
+from dotenv import load_dotenv
 import socket
 
 app = Flask(__name__,static_folder='static')
 CORS(app)
+
+load_dotenv()
 
 # Configuración de la conexión a la base de datos
 DB_NAME = os.getenv("DB_NAME")
