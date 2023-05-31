@@ -47,7 +47,6 @@ def index():
 @app.route('/desbloqueo', methods=['POST'])
 def desbloqueo():
     os = request.form['os']
-    log=""
     try:
         cur.execute(f"SELECT numero, nome, patientid, tipo_exame, sendodigitado, estado, emandamento, data_emandamento, login_emandamento, logindigitando, finalizado FROM medisystem.exames WHERE numero = '{os}';")
         
@@ -66,14 +65,14 @@ def desbloqueo():
                 cur.execute(f"UPDATE medisystem.exames SET estado = '1', sendodigitado = 'F', logindigitando = '' WHERE numero = '{numero}';")
                 conn.commit()
                 writeLogs(f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
-                return render_template('index.html')
+                return render_template('index.html', alert_info=f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
             elif(emandamento == 'T'):
                 cur.execute(f"UPDATE medisystem.exames SET estado = '1', emandamento = 'F', data_emandamento = '', login_emandamento = '' WHERE numero = '{numero}';")
                 conn.commit()
                 writeLogs(f"Estudio en proceso (Andamento), Desbloqueado. OS: '{numero}'")
-                return render_template('index.html')
+                return render_template('index.html',  alert_info=f"Estudio en proceso (Andamento), Desbloqueado. OS: '{numero}'")
                 
-    return render_template('index.html')
+    return render_template('index.html', alert_info=f"OS: '{numero}' no se encuentra bloqueado o no existe en la BD.")
 
 
 @app.route('/modalidad',methods=['POST'])
@@ -85,10 +84,11 @@ def modalidad():
         cur.execute(f"UPDATE medisystem.exames SET modalidade = '{mod_new}' WHERE numero = '{os}';")
         conn.commit()
         writeLogs(f"Modalidad de Estudio Actualizada. OS: '{os}' Nueva Modalidad: '{mod_new}'")
+        return render_template('index.html', alert_info=f"Modalidad de Estudio Actualizada. OS: '{os}' Nueva Modalidad: '{mod_new}'")
     except Exception as e:
         conn.rollback()
         print(f"Error al ejecutar la consulta SQL: {e}")
-    return render_template('index.html')
+    return render_template('index.html', alert_info=f"OS: '{os}' no existe en la BD.")
     
 
 if __name__ == '__main__':

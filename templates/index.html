@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <head>
-      <!--Metadatos-->
-      <meta charset="UTF-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="keywords" content="Sabbag,APP">
-      <meta name="description" content="APP Sabbag Radiologos">
-      <meta name="author" content="Manuel Puche">
-      <meta name="copyright" content="Manuel Puche">
-      <meta name="robots" content="noindex">
-      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-      <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap" rel="stylesheet">
-      <title>Sabbag Radiologos APP</title>
-    </head>
+    <!--Metadatos-->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Sabbag,APP">
+    <meta name="description" content="APP Sabbag Radiologos">
+    <meta name="author" content="Manuel Puche">
+    <meta name="copyright" content="Manuel Puche">
+    <meta name="robots" content="noindex">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap" rel="stylesheet">
+    <title>Sabbag Radiologos APP</title>
   </head>
   <body>
     <header class="header">
@@ -28,7 +26,7 @@
       <div class="content-main__section"> 
         <h2>Cambio de Modalidad</h2>
         <form action="/modalidad" method="post" class="form">
-            <input type="text" class="container__input" name="os" placeholder="Ingresa OS (Orden de Servicio)" required oninput="validarOS(this)" minlength="7" maxlength="9" title="Ingresa un OS valido."/>
+            <input type="text" class="container__input" name="os" placeholder="Ingresa OS (Orden de Servicio)" minlength="7" maxlength="9" title="Ingresa un OS valido."/>
             <label for="modalidad">Modalidad:</label>
             <select id="modalidad" class="container__input" name="modalidad" required>
               <option value="" selected></option>
@@ -49,30 +47,12 @@
       <div class="content-main__section">
         <h2>Desbloquear Estudio</h2>
         <form id="desbloqueo-form" action="/desbloqueo" method="post" class="form">
-          <input type="text" class="container__input" name="os" placeholder="Ingresa OS (Orden de Servicio)" required oninput="validarOS(this)" minlength="7" maxlength="9" title="Ingresa un OS valido."/>
+          <input type="text" class="container__input" name="os" placeholder="Ingresa OS (Orden de Servicio)" minlength="7" maxlength="9" title="Ingresa un OS valido."/>
           <input class="container__input" type="submit" value="Desbloquear"/>
         </form>
       </div>
     </div>
     <a href="log.txt" class="download-log" download="">Descargar log</a>
-    <script>
-      function validarOS(input) {
-        // Eliminar cualquier carácter que no sea un número o guion
-        input.value = input.value.replace(/[^0-9-]/g, '');
-        
-        // Verificar si el guion ya está presente
-        var tieneGuion = input.value.includes('-');
-        
-        // Lógica adicional en consecuencia
-        if (tieneGuion) {
-          console.log("El campo ya tiene el guion");
-        } else {
-          if (input.value.length === 6) {
-            input.value += '-';
-          }
-        }
-      }
-    </script>
-    
+
     </body>
 </html>
