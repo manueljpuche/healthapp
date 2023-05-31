@@ -91,62 +91,6 @@ def modalidad():
     return render_template('index.html')
     
 
-@app.route('/resultados', methods=['POST'])
-def resultados():
-    
-    palabras_clave_str = request.form['palabras_clave']
-    fecha_inicio_str = request.form['fecha_inicio']
-    fecha_fin_str = request.form['fecha_fin']
-    check_palabras = request.form.getlist('check_palabras')
-    modalidades_seleccionadas = request.form.getlist('modalidades')
-    #medico = request.form['medico']
-    
-    if 'todas' in modalidades_seleccionadas:
-        # No se necesita filtrar por modalidad en la consulta SQL
-        sql_modalidades = ''
-    else:
-        modalidades_str = ','.join([f"'{modalidade}'" for modalidade in modalidades_seleccionadas])
-        sql_modalidades = f"AND modalidade IN ({modalidades_str})"
-        
-    #if medico:
-    #    sql_medico = f"AND medico = {medico}"
-    #else:
-    #    sql_medico = ''
-
-    # Separar las palabras clave en una lista
-    palabras_clave = palabras_clave_str.split(",")
-
-
-    # Convertir las fechas a objetos datetime de Python
-    fecha_inicio = datetime.strptime(fecha_inicio_str, '%Y-%m-%d')
-    fecha_fin = datetime.strptime(fecha_fin_str, '%Y-%m-%d')
-
-    # Realizar una consulta SQL para recuperar los datos del campo blob y el número de identificación de la tabla que contiene los informes
-    cur.execute(f"SELECT num_exame, desc_lfinal, servico, nm_pac, data_exame FROM mediclinic.laudos_finais WHERE data_exame between '{fecha_inicio}' and '{fecha_fin}' {sql_modalidades}")
-    
-    with open("Buscador\\Lista.txt","w",encoding="utf-8"):
-        # Iterar sobre los resultados de la consulta
-        for result in cur.fetchall():
-            texto_informe = ""
-            contenido = bytes(result[1])
-            txt = contenido.decode(encoding="ISO-8859-1")
-            try:
-                texto_informe = rtf_to_text(txt)
-            except UnicodeEncodeError:
-                with open("Buscador\\error_log","a",encoding="utf-8") as error:
-                    error.writelines(f"Se produjo un error al codificar el texto del informe {result[0]}.\n\n")
-            
-            os = result[0]
-            servicio = result[2]
-            paciente = result[3]
-            fecha = result[4]
-            
-            if check_palabras:
-                list_equals(texto_informe, palabras_clave, servicio, os, paciente, fecha)
-            else:
-                list_not_equals(texto_informe, palabras_clave, servicio, os, paciente, fecha)                            
-    return send_file("Lista.txt", as_attachment=True)
-
 if __name__ == '__main__':
     app.run(debug=True)
     
