@@ -22,14 +22,6 @@
     margin-bottom: 15px;
 }
 
-input[type="text"]:valid{
-    border: 2px solid #36a84f;
-}
-
-select:valid{
-    border: 2px solid #36a84f;
-}
-
 input:focus, select:focus{
     outline: none;
 }
@@ -46,7 +38,7 @@ h2{
     font-weight: 900;
     margin-bottom: 10px;
 }
-
+/*
 .download-log{
     position: absolute;
     bottom: 0;
@@ -64,4 +56,4 @@ h2{
     color: #555;
     cursor: pointer;
     font-weight: 900;
-}
+}*/
