@@ -11,18 +11,11 @@ app = Flask(__name__,static_folder='static')
 CORS(app)
 
 # Configuración de la conexión a la base de datos
-#DB_NAME = os.environ.get("DB_NAME")
-#DB_USER = os.environ.get("DB_USER")
-#DB_PASSWORD = os.environ.get("DB_PASSWORD")
-#DB_HOSTS = os.environ.get("DB_HOSTS").split(",") 
-#DB_PORT = os.environ.get("DB_PORT")
-
-# Configuración de la conexión a la base de datos
-DB_NAME = "medilab"
-DB_USER = "postgres"
-DB_PASSWORD = "postgres"
-DB_HOSTS = ["10.90.128.101"]
-DB_PORT = "5432"
+DB_NAME = os.environ.get("DB_NAME")
+DB_USER = os.environ.get("DB_USER")
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
+DB_HOSTS = os.environ.get("DB_HOSTS").split(",") 
+DB_PORT = os.environ.get("DB_PORT")
 
 
 for host in DB_HOSTS:
