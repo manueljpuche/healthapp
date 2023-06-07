@@ -89,7 +89,7 @@ def modalidad():
 
 @app.route('/web', methods=['POST'])
 def web():
-    return print("Ping")
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
