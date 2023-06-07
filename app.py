@@ -86,7 +86,10 @@ def modalidad():
         conn.rollback()
         print(f"Error al ejecutar la consulta SQL: {e}")
     return render_template('index.html', alert_info=f"OS: '{os}' no existe en la BD.")
-    
+
+@app.route('/web', methods=['POST'])
+def web():
+    return print("Ping")
 
 if __name__ == '__main__':
     app.run(debug=True)
