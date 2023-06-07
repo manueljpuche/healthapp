@@ -2,12 +2,15 @@ import psycopg2
 import os
 from striprtf.striprtf import rtf_to_text
 from datetime import datetime
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request
 from flask_cors import CORS
 from functions import *
 import socket
 
 app = Flask(__name__,static_folder='static')
+
+app.secret_key = os.urandom(24)
+
 CORS(app)
 
 # Configuración de la conexión a la base de datos
@@ -16,7 +19,6 @@ DB_USER = os.environ.get("DB_USER")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 DB_HOSTS = os.environ.get("DB_HOSTS").split(",") 
 DB_PORT = os.environ.get("DB_PORT")
-
 
 for host in DB_HOSTS:
     try:
@@ -124,7 +126,10 @@ def web():
                 print(f"Error al ejecutar la consulta SQL: {e}")
             
             paciente = cur.fetchone()
-            
+            if len(paciente) > 1:
+                render_template('index.html',alert_message="Paciente duplicado, primero asocia los registros en mediclinic y luego intenta nuevamente")
+                
+                
             if len(paciente) > 0:
                 try:
                     cur.execute(f"SELECT * FROM mediclinic.laudos_finais WHERE patientid = '{paciente[0]}'")
@@ -141,7 +146,8 @@ def web():
                         writeLogs(f"INSERT INTO mediweb.paciente (id_pac,nm_pac,senha_pac,cpf_pac) VALUES ('{paciente[0]}', '{paciente[1]}', '{paciente[3]}','{paciente[2]}');")
                         cur.execute(f"INSERT INTO mediweb.paciente (id_pac,nm_pac,senha_pac,cpf_pac) VALUES ('{paciente[0]}', '{paciente[1]}', '{paciente[3]}','{paciente[2]}');")
                         conn.commit()
-                        return render_template('index.html')
+                        alert_message = f"Registro de Usuario insertado a la base de Datos de MediWeb\nNombre: {paciente[1]}\nID: {paciente[0]}\nContraseña: {paciente[2]}"
+                        return render_template('index.html', alert_message=alert_message)
                     except Exception as e:
                         conn.rollback()
                         print(f"Error al ejecutar la consulta SQL: {e}")
@@ -156,3 +162,4 @@ if __name__ == '__main__':
     
 
 
+#216553
