@@ -11,13 +11,19 @@ app = Flask(__name__,static_folder='static')
 CORS(app)
 
 # Configuración de la conexión a la base de datos
-DB_NAME = os.environ.get("DB_NAME")
-DB_USER = os.environ.get("DB_USER")
-DB_PASSWORD = os.environ.get("DB_PASSWORD")
-DB_HOSTS = os.environ.get("DB_HOSTS").split(",") 
-DB_PORT = os.environ.get("DB_PORT")
+#DB_NAME = os.environ.get("DB_NAME")
+#DB_USER = os.environ.get("DB_USER")
+#DB_PASSWORD = os.environ.get("DB_PASSWORD")
+#DB_HOSTS = os.environ.get("DB_HOSTS").split(",") 
+#DB_PORT = os.environ.get("DB_PORT")
 
-HOST_CONNECT = ""
+# Configuración de la conexión a la base de datos
+DB_NAME = "medilab"
+DB_USER = "postgres"
+DB_PASSWORD = "postgres"
+DB_HOSTS = ["10.90.128.101"]
+DB_PORT = "5432"
+
 
 for host in DB_HOSTS:
     try:
@@ -71,7 +77,6 @@ def desbloqueo():
                 
     return render_template('index.html', alert_info=f"OS: '{numero}' no se encuentra bloqueado o no existe en la BD.")
 
-
 @app.route('/modalidad',methods=['POST'])
 def modalidad():
     os = request.form['os']
@@ -89,6 +94,68 @@ def modalidad():
 
 @app.route('/web', methods=['POST'])
 def web():
+    id_patient = request.form['id_patient']
+    try:
+        cur.execute(f"SELECT id_pac, nm_pac, senha_pac,cpf_pac FROM mediweb.paciente where cpf_pac = '{id_patient}'")
+    except:
+        conn.rollback()
+        print(f"Error al ejecutar la consulta SQL: {e}")
+        
+    result = cur.fetchall()
+    
+    if len(result) == 0:      
+        try:
+            cur.execute(f"SELECT id_pac, nm_pac, senha_pac,cpf_pac FROM mediweb.paciente where cpf_pac = '{id_patient} '")
+        except Exception as e:
+            conn.rollback()
+            print(f"Error al ejecutar la consulta SQL: {e}")   
+        
+        paciente_ = cur.fetchall()
+        
+        if len(paciente_) != 0:
+            for pac in paciente_:
+                try:
+                    writeLogs(f"UPDATE mediweb.paciente SET cpf_pac = '{id_patient}' WHERE id_pac = '{pac[0]}';")
+                    cur.execute(f"UPDATE mediweb.paciente SET cpf_pac = '{id_patient}' WHERE id_pac = '{pac[0]}';")
+                    conn.commit()
+                    return render_template('index.html')
+                except Exception as e:
+                    conn.rollback()
+                    print(f"Error al ejecutar la consulta SQL: {e}")
+        else:
+        
+            try:
+                cur.execute(f"SELECT id_pac,nm_pac,cpf_pac,senhaweb FROM mediclinic.pacientes WHERE cpf_pac = '{id_patient}'")
+            except Exception as e:
+                conn.rollback()
+                print(f"Error al ejecutar la consulta SQL: {e}")
+            
+            paciente = cur.fetchone()
+            
+            if len(paciente) > 0:
+                try:
+                    cur.execute(f"SELECT * FROM mediclinic.laudos_finais WHERE patientid = '{paciente[0]}'")
+                except Exception as e:
+                    conn.rollback()
+                    print(f"Error al ejecutar la consulta SQL: {e}")
+                    
+                informes = cur.fetchone()
+                
+                if len(informes) == 0:
+                    print("Paciente no tiene informes finalizados")
+                else:
+                    try:
+                        writeLogs(f"INSERT INTO mediweb.paciente (id_pac,nm_pac,senha_pac,cpf_pac) VALUES ('{paciente[0]}', '{paciente[1]}', '{paciente[3]}','{paciente[2]}');")
+                        cur.execute(f"INSERT INTO mediweb.paciente (id_pac,nm_pac,senha_pac,cpf_pac) VALUES ('{paciente[0]}', '{paciente[1]}', '{paciente[3]}','{paciente[2]}');")
+                        conn.commit()
+                        return render_template('index.html')
+                    except Exception as e:
+                        conn.rollback()
+                        print(f"Error al ejecutar la consulta SQL: {e}")
+            else:
+                print("Paciente no registra en la BD")
+        
+        
     return render_template('index.html')
 
 if __name__ == '__main__':

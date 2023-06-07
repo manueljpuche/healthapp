@@ -29,7 +29,7 @@
             <input type="text" class="container__input" name="os" placeholder="Ingresa OS (Orden de Servicio)" minlength="7" maxlength="9" title="Ingresa un OS valido."/>
             <label for="modalidad">Modalidad:</label>
             <select id="modalidad" class="container__input" name="modalidad" required>
-              <option value="" selected></option>
+              <option value="" disabled selected hidden>Selecciona la nueva modalidad</option>
               <option value="CR">CR</option>
               <option value="MR">MR</option>
               <option value="CT">CT</option>
@@ -54,8 +54,9 @@
 
       <div class="content-main__section">
         <h2>Paciente Web</h2>
+        <h4><i>"No corrige registros duplicados, en estos casos se debe asociar pacientes desde el RIS"</i></h4>
         <form id="web-form" action="/web" method="post" class="form">
-          <input type="text" class="container__input" name="os" placeholder="Ingresa ID de Paciente"/>
+          <input type="text" class="container__input" name="id_patient" placeholder="Ingresa ID de Paciente"/>
           <input class="container__input" type="submit" value="Enviar"/>
         </form>
       </div>
