@@ -70,7 +70,7 @@ def desbloqueo():
                 conn.close()
                 return render_template('index.html', alert_info=f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
             elif(emandamento == 'T'):
-                cur.execute(f"UPDATE medisystem.exames SET estado = '1', emandamento = 'F', data_emandamento = '', login_emandamento = '' WHERE numero = '{numero}';")
+                cur.execute(f"UPDATE medisystem.exames SET estado = '1', emandamento = 'F', data_emandamento = NULL, login_emandamento = '' WHERE numero = '{numero}';")
                 conn.commit()
                 cur.close()
                 conn.close()
