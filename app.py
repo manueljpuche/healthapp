@@ -51,6 +51,8 @@ def desbloqueo():
         
     except Exception as e:
         conn.rollback()
+        cur.close()
+        conn.close()
         print(f"Error al ejecutar la consulta SQL: {e}")
         data = {'valid': False}  
         
@@ -64,10 +66,14 @@ def desbloqueo():
                 cur.execute(f"UPDATE medisystem.exames SET estado = '1', sendodigitado = 'F', logindigitando = '' WHERE numero = '{numero}';")
                 conn.commit()
                 writeLogs(f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
+                cur.close()
+                conn.close()
                 return render_template('index.html', alert_info=f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
             elif(emandamento == 'T'):
                 cur.execute(f"UPDATE medisystem.exames SET estado = '1', emandamento = 'F', data_emandamento = '', login_emandamento = '' WHERE numero = '{numero}';")
                 conn.commit()
+                cur.close()
+                conn.close()
                 writeLogs(f"Estudio en proceso (Andamento), Desbloqueado. OS: '{numero}'")
                 return render_template('index.html',  alert_info=f"Estudio en proceso (Andamento), Desbloqueado. OS: '{numero}'")
                 
@@ -82,10 +88,14 @@ def modalidad():
     try:
         cur.execute(f"UPDATE medisystem.exames SET modalidade = '{mod_new}' WHERE numero = '{os}';")
         conn.commit()
+        cur.close()
+        conn.close()
         writeLogs(f"Modalidad de Estudio Actualizada. OS: '{os}' Nueva Modalidad: '{mod_new}'")
         return render_template('index.html', alert_info=f"Modalidad de Estudio Actualizada. OS: '{os}' Nueva Modalidad: '{mod_new}'")
     except Exception as e:
         conn.rollback()
+        cur.close()
+        conn.close()
         print(f"Error al ejecutar la consulta SQL: {e}")
     return render_template('index.html', alert_info=f"OS: '{os}' no existe en la BD.")
 
@@ -97,6 +107,8 @@ def web():
         cur.execute(f"SELECT id_pac, nm_pac, senha_pac,cpf_pac FROM mediweb.paciente where cpf_pac = '{id_patient}'")
     except:
         conn.rollback()
+        cur.close()
+        conn.close()
         print(f"Error al ejecutar la consulta SQL: {e}")
         
     result = cur.fetchall()
@@ -106,6 +118,8 @@ def web():
             cur.execute(f"SELECT id_pac, nm_pac, senha_pac,cpf_pac FROM mediweb.paciente where cpf_pac = '{id_patient} '")
         except Exception as e:
             conn.rollback()
+            cur.close()
+            conn.close()
             print(f"Error al ejecutar la consulta SQL: {e}")   
         
         paciente_ = cur.fetchall()
@@ -116,9 +130,13 @@ def web():
                     writeLogs(f"UPDATE mediweb.paciente SET cpf_pac = '{id_patient}' WHERE id_pac = '{pac[0]}';")
                     cur.execute(f"UPDATE mediweb.paciente SET cpf_pac = '{id_patient}' WHERE id_pac = '{pac[0]}';")
                     conn.commit()
+                    cur.close()
+                    conn.close()
                     return render_template('index.html')
                 except Exception as e:
                     conn.rollback()
+                    cur.close()
+                    conn.close()
                     print(f"Error al ejecutar la consulta SQL: {e}")
         else:
         
@@ -126,6 +144,8 @@ def web():
                 cur.execute(f"SELECT id_pac,nm_pac,cpf_pac,senhaweb FROM mediclinic.pacientes WHERE cpf_pac = '{id_patient}'")
             except Exception as e:
                 conn.rollback()
+                cur.close()
+                conn.close()
                 print(f"Error al ejecutar la consulta SQL: {e}")
             
             paciente = cur.fetchone()
@@ -138,6 +158,8 @@ def web():
                     cur.execute(f"SELECT * FROM mediclinic.laudos_finais WHERE patientid = '{paciente[0]}'")
                 except Exception as e:
                     conn.rollback()
+                    cur.close()
+                    conn.close()
                     print(f"Error al ejecutar la consulta SQL: {e}")
                     
                 informes = cur.fetchone()
@@ -149,6 +171,8 @@ def web():
                         writeLogs(f"INSERT INTO mediweb.paciente (id_pac,nm_pac,senha_pac,cpf_pac) VALUES ('{paciente[0]}', '{paciente[1]}', '{paciente[3]}','{paciente[2]}');")
                         cur.execute(f"INSERT INTO mediweb.paciente (id_pac,nm_pac,senha_pac,cpf_pac) VALUES ('{paciente[0]}', '{paciente[1]}', '{paciente[3]}','{paciente[2]}');")
                         conn.commit()
+                        cur.close()
+                        conn.close()
                         alert_message = f"Registro de Usuario insertado a la base de Datos de MediWeb\nNombre: {paciente[1]}\nID: {paciente[0]}\nContraseña: {paciente[2]}"
                         return render_template('index.html', alert_message=alert_message)
                     except Exception as e:
