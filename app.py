@@ -2,7 +2,7 @@ import psycopg2
 import os
 from striprtf.striprtf import rtf_to_text
 from datetime import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,redirect
 from flask_cors import CORS
 from functions import *
 import socket
@@ -58,7 +58,7 @@ def desbloqueo():
         
     result = cur.fetchone()
     if result:
-        numero, nome, patientid, tipo_exame, sendodigitado, estado, emandamento, data_emandamento, login_emandamento, logindigitando, finalizado = result
+        numero, nome, patientid, tipo_exame, sendodigitado, estado, emandamento, data_emandamento, login_emandamento, logindigitando, finalizado, hora_laudo,login_laudo = result
         if(finalizado == 'T'):
             writeLogs(f"Estudio se encuentra finalizado. OS: '{numero}'")
         else:
@@ -68,16 +68,21 @@ def desbloqueo():
                 writeLogs(f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
                 cur.close()
                 conn.close()
-                return render_template('index.html', alert_info=f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
+                return redirect('/')
+                #return render_template('index.html', alert_info=f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
             elif(emandamento == 'T'):
-                cur.execute(f"UPDATE medisystem.exames SET estado = '1', emandamento = 'F', data_emandamento = NULL, login_emandamento = '' WHERE numero = '{numero}';")
+                cur.execute(f"UPDATE medisystem.exames SET emandamento = 'F', data_emandamento = NULL, login_emandamento = '', hora_laudo = NULL, login_laudo = '' WHERE numero = '{numero}';")
+                conn.commit()
+                cur.execute(f"UPDATE medisystem.exames SET estado = '1' WHERE numero = '{numero}';")
                 conn.commit()
                 cur.close()
                 conn.close()
                 writeLogs(f"Estudio en proceso (Andamento), Desbloqueado. OS: '{numero}'")
-                return render_template('index.html',  alert_info=f"Estudio en proceso (Andamento), Desbloqueado. OS: '{numero}'")
-                
-    return render_template('index.html', alert_info=f"OS: '{numero}' no se encuentra bloqueado o no existe en la BD.")
+                return redirect('/')
+                #return render_template('index.html',  alert_info=f"Estudio en proceso (Andamento), Desbloqueado. OS: '{numero}'")
+    
+    return redirect('/')            
+    #return render_template('index.html', alert_info=f"OS: '{numero}' no se encuentra bloqueado o no existe en la BD.")
 
 @app.route('/modalidad',methods=['POST'])
 def modalidad():
@@ -91,13 +96,16 @@ def modalidad():
         cur.close()
         conn.close()
         writeLogs(f"Modalidad de Estudio Actualizada. OS: '{os}' Nueva Modalidad: '{mod_new}'")
-        return render_template('index.html', alert_info=f"Modalidad de Estudio Actualizada. OS: '{os}' Nueva Modalidad: '{mod_new}'")
+        return redirect('/')
+        #return render_template('index.html', alert_info=f"Modalidad de Estudio Actualizada. OS: '{os}' Nueva Modalidad: '{mod_new}'")
     except Exception as e:
         conn.rollback()
         cur.close()
         conn.close()
         print(f"Error al ejecutar la consulta SQL: {e}")
-    return render_template('index.html', alert_info=f"OS: '{os}' no existe en la BD.")
+    
+    return redirect('/')
+    #return render_template('index.html', alert_info=f"OS: '{os}' no existe en la BD.")
 
 @app.route('/web', methods=['POST'])
 def web():
@@ -132,7 +140,8 @@ def web():
                     conn.commit()
                     cur.close()
                     conn.close()
-                    return render_template('index.html')
+                    return redirect('/')
+                    #return render_template('index.html')
                 except Exception as e:
                     conn.rollback()
                     cur.close()
@@ -174,15 +183,18 @@ def web():
                         cur.close()
                         conn.close()
                         alert_message = f"Registro de Usuario insertado a la base de Datos de MediWeb\nNombre: {paciente[1]}\nID: {paciente[0]}\nContraseña: {paciente[2]}"
-                        return render_template('index.html', alert_message=alert_message)
+                        return redirect('/')
+                        #return render_template('index.html', alert_message=alert_message)
                     except Exception as e:
                         conn.rollback()
+                        cur.close()
+                        conn.close()
                         print(f"Error al ejecutar la consulta SQL: {e}")
             else:
                 print("Paciente no registra en la BD")
         
-        
-    return render_template('index.html')
+    return redirect('/')   
+    #return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
