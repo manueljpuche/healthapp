@@ -62,11 +62,7 @@
       </div>
 
     </div>
-    {% if alert_message %}
-    <script>
-      alert("{{ alert_message }}");
-    </script>
-    {% endif %}
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <!--<a href="log.txt" class="download-log" download="">Descargar log</a>-->
     </body>
 </html>
