@@ -47,7 +47,7 @@ def desbloqueo():
     cur = conn.cursor()
     os = request.form['os']
     try:
-        cur.execute(f"SELECT numero, nome, patientid, tipo_exame, sendodigitado, estado, emandamento, data_emandamento, login_emandamento, logindigitando, finalizado FROM medisystem.exames WHERE numero = '{os}';")
+        cur.execute(f"SELECT numero, nome, patientid, tipo_exame, sendodigitado, estado, emandamento, data_emandamento, login_emandamento, logindigitando, finalizado,hora_laudo,login_laudo FROM medisystem.exames WHERE numero = '{os}';")
         
     except Exception as e:
         conn.rollback()
@@ -58,7 +58,7 @@ def desbloqueo():
         
     result = cur.fetchone()
     if result:
-        numero, nome, patientid, tipo_exame, sendodigitado, estado, emandamento, data_emandamento, login_emandamento, logindigitando, finalizado, hora_laudo,login_laudo = result
+        numero, nome, patientid, tipo_exame, sendodigitado, estado, emandamento, data_emandamento, login_emandamento, logindigitando, finalizado, hora_laudo, login_laudo = result
         if(finalizado == 'T'):
             writeLogs(f"Estudio se encuentra finalizado. OS: '{numero}'")
         else:
