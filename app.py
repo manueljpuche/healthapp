@@ -36,7 +36,7 @@ for host in DB_HOSTS:
         writeLogs(f"Conectado a la base de datos en {host} desde {socket.gethostbyname(socket.gethostname())}")
         
 
-cur = conn.cursor()
+
 
 @app.route('/')
 def index():
@@ -44,6 +44,7 @@ def index():
 
 @app.route('/desbloqueo', methods=['POST'])
 def desbloqueo():
+    cur = conn.cursor()
     os = request.form['os']
     try:
         cur.execute(f"SELECT numero, nome, patientid, tipo_exame, sendodigitado, estado, emandamento, data_emandamento, login_emandamento, logindigitando, finalizado FROM medisystem.exames WHERE numero = '{os}';")
@@ -74,6 +75,7 @@ def desbloqueo():
 
 @app.route('/modalidad',methods=['POST'])
 def modalidad():
+    cur = conn.cursor()
     os = request.form['os']
     mod_new = request.form.getlist('modalidad')[0]
     print(f"UPDATE medisystem.exames SET modalidade='{mod_new}' WHERE numero = '{os}';")
@@ -89,6 +91,7 @@ def modalidad():
 
 @app.route('/web', methods=['POST'])
 def web():
+    cur = conn.cursor()
     id_patient = request.form['id_patient']
     try:
         cur.execute(f"SELECT id_pac, nm_pac, senha_pac,cpf_pac FROM mediweb.paciente where cpf_pac = '{id_patient}'")
