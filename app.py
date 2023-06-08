@@ -1,28 +1,13 @@
 import psycopg2
 import os
-<<<<<<< HEAD
-=======
-from striprtf.striprtf import rtf_to_text
-from datetime import datetime
-from flask import Flask, render_template, request
-from flask_cors import CORS
-from functions import *
->>>>>>> af99a3f (Alerts)
 import socket
 from flask import Flask, render_template, request, redirect
 from flask_cors import CORS
 
-<<<<<<< HEAD
 from functions import writeLogs, establish_connection
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.urandom(24)
-=======
-app = Flask(__name__,static_folder='static')
-
-app.secret_key = os.urandom(24)
-
->>>>>>> af99a3f (Alerts)
 CORS(app)
 
 # Configuración de la conexión a la base de datos
@@ -32,29 +17,8 @@ DB_PASSWORD = os.environ.get("DB_PASSWORD")
 DB_HOSTS = os.environ.get("DB_HOSTS").split(",")
 DB_PORT = os.environ.get("DB_PORT")
 
-<<<<<<< HEAD
 conn = establish_connection(DB_NAME,DB_USER,DB_PASSWORD,DB_HOSTS,DB_PORT)
 # Ruta principal
-=======
-for host in DB_HOSTS:
-    try:
-        conn = psycopg2.connect(
-            dbname=DB_NAME,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            host=host,
-            port=DB_PORT
-        )
-        break  # Si se conecta, salir del ciclo
-    except psycopg2.OperationalError as e:
-        print(f"No se pudo conectar a la base de datos en {host}: {e}")
-    finally:
-        writeLogs(f"Conectado a la base de datos en {host} desde {socket.gethostbyname(socket.gethostname())}")
-        
-
-cur = conn.cursor()
-
->>>>>>> af99a3f (Alerts)
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -121,7 +85,6 @@ def web():
     cur = conn.cursor()
 
     try:
-<<<<<<< HEAD
         cur.execute(f"SELECT id_pac, nm_pac, senha_pac, cpf_pac FROM mediweb.paciente WHERE cpf_pac = '{id_patient}'")
         result = cur.fetchall()
 
@@ -131,69 +94,11 @@ def web():
 
             if len(paciente_) != 0:
                 for pac in paciente_:
-=======
-        cur.execute(f"SELECT id_pac, nm_pac, senha_pac,cpf_pac FROM mediweb.paciente where cpf_pac = '{id_patient}'")
-    except:
-        conn.rollback()
-        print(f"Error al ejecutar la consulta SQL: {e}")
-        
-    result = cur.fetchall()
-    
-    if len(result) == 0:      
-        try:
-            cur.execute(f"SELECT id_pac, nm_pac, senha_pac,cpf_pac FROM mediweb.paciente where cpf_pac = '{id_patient} '")
-        except Exception as e:
-            conn.rollback()
-            print(f"Error al ejecutar la consulta SQL: {e}")   
-        
-        paciente_ = cur.fetchall()
-        
-        if len(paciente_) != 0:
-            for pac in paciente_:
-                try:
-                    writeLogs(f"UPDATE mediweb.paciente SET cpf_pac = '{id_patient}' WHERE id_pac = '{pac[0]}';")
-                    cur.execute(f"UPDATE mediweb.paciente SET cpf_pac = '{id_patient}' WHERE id_pac = '{pac[0]}';")
-                    conn.commit()
-                    return render_template('index.html')
-                except Exception as e:
-                    conn.rollback()
-                    print(f"Error al ejecutar la consulta SQL: {e}")
-        else:
-        
-            try:
-                cur.execute(f"SELECT id_pac,nm_pac,cpf_pac,senhaweb FROM mediclinic.pacientes WHERE cpf_pac = '{id_patient}'")
-            except Exception as e:
-                conn.rollback()
-                print(f"Error al ejecutar la consulta SQL: {e}")
-            
-            paciente = cur.fetchone()
-            if len(paciente) > 1:
-                render_template('index.html',alert_message="Paciente duplicado, primero asocia los registros en mediclinic y luego intenta nuevamente")
-                
-                
-            if len(paciente) > 0:
-                try:
-                    cur.execute(f"SELECT * FROM mediclinic.laudos_finais WHERE patientid = '{paciente[0]}'")
-                except Exception as e:
-                    conn.rollback()
-                    print(f"Error al ejecutar la consulta SQL: {e}")
-                    
-                informes = cur.fetchone()
-                
-                if len(informes) == 0:
-                    print("Paciente no tiene informes finalizados")
-                else:
->>>>>>> af99a3f (Alerts)
                     try:
                         writeLogs(f"UPDATE mediweb.paciente SET cpf_pac = '{id_patient}' WHERE id_pac = '{pac[0]}';")
                         cur.execute(f"UPDATE mediweb.paciente SET cpf_pac = '{id_patient}' WHERE id_pac = '{pac[0]}';")
                         conn.commit()
-<<<<<<< HEAD
                         return redirect('/')
-=======
-                        alert_message = f"Registro de Usuario insertado a la base de Datos de MediWeb\nNombre: {paciente[1]}\nID: {paciente[0]}\nContraseña: {paciente[2]}"
-                        return render_template('index.html', alert_message=alert_message)
->>>>>>> af99a3f (Alerts)
                     except Exception as e:
                         conn.rollback()
                         print(f"Error al ejecutar la consulta SQL: {e}")
@@ -228,12 +133,4 @@ def web():
     return redirect('/')
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     app.run(debug=True)
-=======
-    app.run(debug=True)
-    
-
-
-#216553
->>>>>>> af99a3f (Alerts)
