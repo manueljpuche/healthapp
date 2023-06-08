@@ -24,7 +24,7 @@ def establish_connection(db_name, db_user, db_password, db_hosts, db_port):
         except psycopg2.OperationalError as e:
             print(f"No se pudo conectar a la base de datos en {host}: {e}")
         finally:
-            write_logs(f"Conectado a la base de datos en {host} desde {socket.gethostbyname(socket.gethostname())}")
+            writeLogs(f"Conectado a la base de datos en {host} desde {socket.gethostbyname(socket.gethostname())}")
 
     return conn
 
