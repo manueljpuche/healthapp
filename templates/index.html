@@ -60,9 +60,11 @@
           <input class="container__input" type="submit" value="Enviar"/>
         </form>
       </div>
-
     </div>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-    <!--<a href="log.txt" class="download-log" download="">Descargar log</a>-->
+    {%if mensaje%}
+    <script>
+      alert("{{mensaje}}")        
+    </script>
+    {% endif %}
     </body>
 </html>
