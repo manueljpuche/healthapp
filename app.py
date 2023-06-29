@@ -14,14 +14,15 @@ CORS(app)
 DB_NAME = os.environ.get("DB_NAME")
 DB_USER = os.environ.get("DB_USER")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
-#DB_HOSTS = os.environ.get("DB_HOSTS").split(",")
+DB_HOSTS = os.environ.get("DB_HOSTS").split(",")
 DB_PORT = os.environ.get("DB_PORT")
-conn = establish_connection("medilab","postgres","postgres",["10.90.128.101"],"5432")
-#conn = establish_connection(DB_NAME,DB_USER,DB_PASSWORD,DB_HOSTS,DB_PORT)
+
+conn = establish_connection(DB_NAME,DB_USER,DB_PASSWORD,DB_HOSTS,DB_PORT)
+
 # Ruta principal
 @app.route('/')
 def index():
-    return render_template('index.html',mensaje = "Prueba Jinja")
+    return render_template('result.html',mensaje = "Prueba Jinja")
 
 # Ruta para desbloquear un estudio
 @app.route('/desbloqueo', methods=['POST'])
@@ -41,24 +42,24 @@ def desbloqueo():
                     cur.execute(f"UPDATE medisystem.exames SET estado = '1', sendodigitado = 'F', logindigitando = '' WHERE numero = '{numero}';")
                     conn.commit()
                     writeLogs(f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
-                    return render_template('index.html',mensaje = f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
+                    return render_template('result.html',mensaje = f"Estudio siendo digitado, Desbloqueado. OS: '{numero}'")
                 elif(emandamento == 'T'):
                     cur.execute(f"UPDATE medisystem.exames SET emandamento = 'F', data_emandamento = NULL, login_emandamento = '', hora_laudo = NULL, login_laudo = '' WHERE numero = '{numero}';")
                     conn.commit()
                     cur.execute(f"UPDATE medisystem.exames SET estado = '1' WHERE numero = '{numero}';")
                     conn.commit()
                     writeLogs(f"Estudio en proceso (Andamento), Desbloqueado. OS: '{numero}'")
-                    return render_template('index.html',mensaje = f"Estudio en proceso (Andamento), Desbloqueado. OS: '{numero}'")
+                    return render_template('result.html',mensaje = f"Estudio en proceso (Andamento), Desbloqueado. OS: '{numero}'")
         else:
             writeLogs(f"OS: '{numero}' no se encuentra bloqueado o no existe en la BD.")
-            return render_template('index.html',mensaje = f"OS: '{numero}' no se encuentra bloqueado o no existe en la BD.")
+            return render_template('result.html',mensaje = f"OS: '{numero}' no se encuentra bloqueado o no existe en la BD.")
     except Exception as e:
         conn.rollback()
         print(f"Error al ejecutar la consulta SQL: {e}")
     finally:
         cur.close()
 
-    return render_template('index.html')
+    return render_template('result.html')
 
 # Ruta para actualizar la modalidad de un estudio
 @app.route('/modalidad', methods=['POST'])
@@ -71,14 +72,14 @@ def modalidad():
         cur.execute(f"UPDATE medisystem.exames SET modalidade = '{mod_new}' WHERE numero = '{os}';")
         conn.commit()
         writeLogs(f"Modalidad de Estudio Actualizada. OS: '{os}' Nueva Modalidad: '{mod_new}'")
-        return render_template('index.html',mensaje = f"Modalidad de Estudio Actualizada. OS: '{os}' Nueva Modalidad: '{mod_new}'")
+        return render_template('result.html',mensaje = f"Modalidad de Estudio Actualizada. OS: '{os}' Nueva Modalidad: '{mod_new}'")
     except Exception as e:
         conn.rollback()
         print(f"Error al ejecutar la consulta SQL: {e}")
     finally:
         cur.close()
 
-    return render_template('index.html')
+    return render_template('result.html')
 
 # Ruta para procesar la información de un paciente desde la web
 @app.route('/web', methods=['POST'])
@@ -101,7 +102,7 @@ def web():
                         cur.execute(f"UPDATE mediweb.paciente SET cpf_pac = '{id_patient}' WHERE id_pac = '{pac[0]}';")
                         conn.commit()
                         app.redirect("/")
-                        return render_template('index.html',mensaje = f"Informacion de Paciente:\n\nNombre: {pac[1]}\nID: {pac[0]}\nContraseña: {pac[2]}\nError: ID con Espacio al Final(Corregido)")
+                        return render_template('result.html',mensaje = f"Informacion de Paciente:\n\nNombre: {pac[1]}\nID: {pac[0]}\nContraseña: {pac[2]}\nError: ID con Espacio al Final(Corregido)")
                     except Exception as e:
                         conn.rollback()
                         print(f"Error al ejecutar la consulta SQL: {e}")
